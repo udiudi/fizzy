@@ -94,11 +94,6 @@ Rails.application.routes.draw do
     end
   end
 
-  # Support for legacy URLs
-  get "/collections/:collection_id/cards/:id", to: redirect { |params, request| "#{request.script_name}/cards/#{params[:id]}" }
-  get "/collections/:id", to: redirect { |params, request| "#{request.script_name}/boards/#{params[:id]}" }
-  get "/public/collections/:id", to: redirect { |params, request| "#{request.script_name}/public/boards/#{params[:id]}" }
-
   namespace :notifications do
     resource :settings
     resource :unsubscribe
@@ -227,6 +222,11 @@ Rails.application.routes.draw do
   resolve "Webhook" do |webhook, options|
     route_for :board_webhook, webhook.board, webhook, options
   end
+ 
+  # Support for legacy URLs
+  get "/collections/:collection_id/cards/:id", to: redirect { |params, request| "#{request.script_name}/cards/#{params[:id]}" }
+  get "/collections/:id", to: redirect { |params, request| "#{request.script_name}/boards/#{params[:id]}" }
+  get "/public/collections/:id", to: redirect { |params, request| "#{request.script_name}/public/boards/#{params[:id]}" }
 
   get "up", to: "rails/health#show", as: :rails_health_check
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
