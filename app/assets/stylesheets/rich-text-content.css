@@ -40,6 +40,10 @@
       text-decoration: line-through;
     }
 
+    :where(mark, .lexxy-content__highlight) {
+      background-color: transparent;
+      color: inherit;
+    }
 
     :where(p, blockquote) {
       letter-spacing: -0.005ch;

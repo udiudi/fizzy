@@ -167,6 +167,71 @@
     flex: 1;
   }
 
+  :where(.lexxy-highlight-dialog) {
+    .lexxy-highlight-dialog-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75ch;
+
+      [data-button-group] {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5ch;
+      }
+
+      button {
+        appearance: none;
+        background: var(--color-canvas);
+        block-size: 3.5ch;
+        border: none;
+        border-radius: 0.5ch;
+        color: var(--color-ink);
+        cursor: pointer;
+        display: grid;
+        font-size: inherit;
+        inline-size: 3.5ch;
+        place-items: center;
+        position: relative;
+        outline: none;
+
+        &:after {
+          align-self: center;
+          content: "Aa";
+          display: inline-block;
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          position: absolute;
+          inset-block-start: 0;
+          inset-block-end: 0;
+          inset-inline-end: 0;
+          inset-inline-start: 0;
+        }
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &[aria-pressed="true"] {
+          box-shadow: 0 0 0 1px var(--color-canvas), 0 0 0 3px var(--color-link);
+
+          &:after {
+            content: "✓";
+          }
+        }
+      }
+
+      .lexxy-highlight-dialog-reset {
+        inline-size: 100%;
+
+        &[disabled] {
+          display: none;
+        }
+
+        &:after { display: none; }
+      }
+    }
+  }
+
   /* Based on .input, .input--select */
   .lexxy-code-language-picker {
     -webkit-appearance: none;
