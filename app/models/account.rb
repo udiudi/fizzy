@@ -27,7 +27,7 @@ class Account < ApplicationRecord
   end
 
   def slug
-    "/#{external_account_id}"
+    "/#{AccountSlug.encode(external_account_id)}"
   end
 
   def account
