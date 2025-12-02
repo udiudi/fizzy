@@ -38,8 +38,10 @@
       min-block-size: 20lh;
     }
 
-    @media (max-width: 519px) {
-      display: none;
+    body:not(.public) & {
+      @media (max-width: 519px) {
+        display: none;
+      }
     }
   }
 
