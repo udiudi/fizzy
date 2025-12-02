@@ -78,7 +78,7 @@
 
     .card__meta,
     .card__stages {
-      @media (min-width: 639px) {
+      @media (min-width: 640px) {
         font-size: var(--text-small);
       }
     }
@@ -119,14 +119,14 @@
       inset: calc(var(--bubble-size) / -4) calc(var(--bubble-size) / 1.5) auto auto;
       translate: 0 0;
 
-      @media (max-width: 800px) {
+      @media (max-width: 799px) {
         --bubble-size: 4.5rem;
 
         inset: calc(var(--bubble-size) / 1.5) 0 auto auto;
       }
     }
 
-    @media (max-width: 800px) {
+    @media (max-width: 799px) {
       --padding-inline: var(--main-padding);
 
       column-gap: 0;
@@ -169,7 +169,7 @@
   .card-perma__actions--left { grid-area: actions-left; }
   .card-perma__actions--right { grid-area: actions-right; }
 
-  @media (max-width: 800px) {
+  @media (max-width: 799px) {
     .card-perma__actions {
       display: flex;
       padding-inline: var(--padding-inline);
