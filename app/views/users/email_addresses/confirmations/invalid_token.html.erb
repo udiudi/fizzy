@@ -1,0 +1,16 @@
+<% @page_title = "Confirm email change" %>
+
+<div class="panel shadow center flex flex-column gap-half" style="--panel-size: 45ch;">
+  <header>
+    <h1 class="txt-x-large font-weight-black margin-none">
+      <%= @page_title %>
+    </h1>
+    <p class="margin-none">Something went wrong.</p>
+  </header>
+
+  <p class="margin-none">
+  It looks like the email confirmation link is no longer valid.
+  Try changing your email address again from <%= link_to "your profile", edit_user_url(script_name: @user.account.slug, id: @user) %>.
+  If that doesn't help, please <%= mail_to "send us an email", "support@fizzy.do" %>.
+  </p>
+</div>
