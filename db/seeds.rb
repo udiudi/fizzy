@@ -13,7 +13,7 @@ else
 
   def create_tenant(signal_account_name)
     tenant_id = ActiveRecord::FixtureSet.identify signal_account_name
-    email_address = "david@37signals.com"
+    email_address = "david@example.com"
     identity = Identity.find_or_create_by!(email_address: email_address, staff: true)
 
     unless account = Account.find_by(external_account_id: tenant_id)
