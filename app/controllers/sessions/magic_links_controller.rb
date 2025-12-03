@@ -12,7 +12,7 @@ class Sessions::MagicLinksController < ApplicationController
     if magic_link = MagicLink.consume(code)
       authenticate_with(magic_link)
     else
-      redirect_to session_magic_link_path, alert: "Try another code."
+      redirect_to session_magic_link_path, flash: { shake: true }
     end
   end
 
