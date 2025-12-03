@@ -1,19 +1,16 @@
-<% @page_title = "Confirm email change" %>
+<% @page_title = "Link expired" %>
 
-<div class="panel shadow center flex flex-column gap-half" style="--panel-size: 45ch;">
-  <header>
-    <h1 class="txt-x-large font-weight-black margin-none">
-      <%= @page_title %>
-    </h1>
-    <p class="margin-none">Something went wrong.</p>
-  </header>
-
-  <p>
-    It looks like this email confirmation link is no longer valid. They last only 30 minues.
-    Try changing your email address again from <%= link_to "your profile", edit_user_url(script_name: @user.account.slug, id: @user) %>.
+<div class="panel panel--centered center flex flex-column gap-half" style="--panel-size: 50ch;">
+  <h1 class="txt-x-large font-weight-black margin-none">
+    <%= @page_title %>
+  </h1>
+  <p class="margin-none-block-start margin-block-end-half">
+    That email confirmation link is no longer valid—they expire after 30 minues. You’ll have to try again.
   </p>
 
-  <p>
-    If that doesn't help, please <%= mail_to "support@fizzy.do", "send us an email" %>.
+  <%= link_to "Change my email address", new_user_email_address_path(user_id: @user, script_name: @user.account.slug), class: "btn btn--link center" %>
+
+  <p class="txt-small txt-subtle">
+    If you get stuck, <%= mail_to "support@fizzy.do", "send us an email" %> and we’ll get you back on track.
   </p>
 </div>
