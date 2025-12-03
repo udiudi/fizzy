@@ -15,7 +15,12 @@ class Cards::Comments::ReactionsController < ApplicationController
 
   def destroy
     @reaction = @comment.reactions.find(params[:id])
-    @reaction.destroy
+
+    if Current.user != @reaction.reacter
+      head :forbidden
+    else
+      @reaction.destroy
+    end
   end
 
   private
