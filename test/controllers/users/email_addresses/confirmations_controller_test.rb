@@ -25,6 +25,6 @@ class Users::EmailAddresses::ConfirmationsControllerTest < ActionDispatch::Integ
 
     assert_equal @user.identity.email_address, @old_email
     assert_response :unprocessable_entity
-    assert_match /Something went wrong/, response.body
+    assert_match /Link expired/, response.body
   end
 end
