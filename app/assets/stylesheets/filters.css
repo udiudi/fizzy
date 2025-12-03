@@ -124,10 +124,6 @@
       margin-inline-end: calc((var(--btn-size) + var(--inline-space-half) + 0.25em) * -1);
       min-inline-size: calc(var(--input-width) + (0.25 * var(--collapsed-filter-space)));
     }
-
-    @media (max-width: 479px) {
-      --input-width: 100%;
-    }
   }
 
   .filter-toggle {
