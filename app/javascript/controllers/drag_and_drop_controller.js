@@ -32,16 +32,18 @@ export default class extends Controller {
   }
 
   async drop(event) {
-    const container = this.#containerContaining(event.target)
+    const targetContainer = this.#containerContaining(event.target)
 
-    if (!container || container === this.sourceContainer) { return }
+    if (!targetContainer || targetContainer === this.sourceContainer) { return }
 
     this.wasDropped = true
+    this.#increaseCounter(targetContainer)
     this.#decreaseCounter(this.sourceContainer)
+
     const sourceContainer = this.sourceContainer
-    this.#insertDraggedItem(container, this.dragItem)
-    await this.#submitDropRequest(this.dragItem, container)
-    this.#reloadSourceFrame(sourceContainer);
+    this.#insertDraggedItem(targetContainer, this.dragItem)
+    await this.#submitDropRequest(this.dragItem, targetContainer)
+    this.#reloadSourceFrame(sourceContainer)
   }
 
   dragEnd() {
@@ -65,17 +67,22 @@ export default class extends Controller {
     this.containerTargets.forEach(container => container.classList.remove(this.hoverContainerClass))
   }
 
-  #decreaseCounter(sourceContainer) {
-    const counterElement = sourceContainer.querySelector("[data-drag-and-drop-counter]")
+  #increaseCounter(container) {
+    this.#modifyCounter(container, count => count + 1)
+  }
+
+  #decreaseCounter(container) {
+    this.#modifyCounter(container, count => Math.max(0, count - 1))
+  }
+
+  #modifyCounter(container, fn) {
+    const counterElement = container.querySelector("[data-drag-and-drop-counter]")
     if (counterElement) {
       const currentValue = counterElement.textContent.trim()
 
       if (!/^\d+$/.test(currentValue)) return
 
-      const count = parseInt(currentValue)
-      if (count > 0) {
-        counterElement.textContent = count - 1
-      }
+      counterElement.textContent = fn(parseInt(currentValue))
     }
   }
 
