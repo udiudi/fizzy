@@ -16,11 +16,14 @@ export default class extends Controller {
     await nextFrame()
     this.dragItem = this.#itemContaining(event.target)
     this.sourceContainer = this.#containerContaining(this.dragItem)
+    this.originalDraggedItemCssVariable = this.#containerCssVariableFor(this.sourceContainer)
     this.dragItem.classList.add(this.draggedItemClass)
   }
 
   dragOver(event) {
     event.preventDefault()
+    if (!this.dragItem) { return }
+
     const container = this.#containerContaining(event.target)
     this.#clearContainerHoverClasses()
 
@@ -28,6 +31,9 @@ export default class extends Controller {
 
     if (container !== this.sourceContainer) {
       container.classList.add(this.hoverContainerClass)
+      this.#applyContainerCssVariable(container)
+    } else {
+      this.#restoreOriginalDraggedItemCssVariable()
     }
   }
 
@@ -50,9 +56,14 @@ export default class extends Controller {
     this.dragItem.classList.remove(this.draggedItemClass)
     this.#clearContainerHoverClasses()
 
+    if (!this.wasDropped) {
+      this.#restoreOriginalDraggedItemCssVariable()
+    }
+
     this.sourceContainer = null
     this.dragItem = null
     this.wasDropped = false
+    this.originalDraggedItemCssVariable = null
   }
 
   #itemContaining(element) {
@@ -65,6 +76,28 @@ export default class extends Controller {
 
   #clearContainerHoverClasses() {
     this.containerTargets.forEach(container => container.classList.remove(this.hoverContainerClass))
+  }
+
+  #applyContainerCssVariable(container) {
+    const cssVariable = this.#containerCssVariableFor(container)
+    if (cssVariable) {
+      this.dragItem.style.setProperty(cssVariable.name, cssVariable.value)
+    }
+  }
+
+  #restoreOriginalDraggedItemCssVariable() {
+    if (this.originalDraggedItemCssVariable) {
+      const { name, value } = this.originalDraggedItemCssVariable
+      this.dragItem.style.setProperty(name, value)
+    }
+  }
+
+  #containerCssVariableFor(container) {
+    const { dragAndDropCssVariableName, dragAndDropCssVariableValue } = container.dataset
+    if (dragAndDropCssVariableName && dragAndDropCssVariableValue) {
+      return { name: dragAndDropCssVariableName, value: dragAndDropCssVariableValue }
+    }
+    return null
   }
 
   #increaseCounter(container) {
