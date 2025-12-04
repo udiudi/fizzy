@@ -14,4 +14,17 @@ class User::AvatarTest < ActiveSupport::TestCase
     assert_not users(:david).avatar.variable?
     assert_equal users(:david).avatar.blob, users(:david).avatar_thumbnail.blob
   end
+
+  test "allows valid image content types" do
+    users(:david).avatar.attach(io: File.open(file_fixture("moon.jpg")), filename: "test.jpg")
+
+    assert users(:david).valid?
+  end
+
+  test "rejects SVG uploads" do
+    users(:david).avatar.attach(io: File.open(file_fixture("avatar.svg")), filename: "avatar.svg")
+
+    assert_not users(:david).valid?
+    assert_includes users(:david).errors[:avatar], "must be a JPEG, PNG, GIF, or WebP image"
+  end
 end
