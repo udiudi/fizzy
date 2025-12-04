@@ -39,4 +39,8 @@
       display: none;
     }
   }
+
+  .cards__list:has(> :not(.blank-slate)) .card--hide-unless-empty {
+    display: none;
+  }
 }
