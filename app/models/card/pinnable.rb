@@ -3,6 +3,14 @@ module Card::Pinnable
 
   included do
     has_many :pins, dependent: :destroy
+
+    after_update_commit :broadcast_pin_updates
+  end
+
+  def broadcast_pin_updates
+    pins.each do |pin|
+      pin.broadcast_replace_to [ pin.user, :pins_tray ], partial: "my/pins/pin"
+    end
   end
 
   def pinned_by?(user)
