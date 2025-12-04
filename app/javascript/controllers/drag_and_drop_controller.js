@@ -39,6 +39,7 @@ export default class extends Controller {
     this.wasDropped = true
     this.#decreaseCounter(this.sourceContainer)
     const sourceContainer = this.sourceContainer
+    this.#insertDraggedItem(container, this.dragItem)
     await this.#submitDropRequest(this.dragItem, container)
     this.#reloadSourceFrame(sourceContainer);
   }
@@ -46,10 +47,6 @@ export default class extends Controller {
   dragEnd() {
     this.dragItem.classList.remove(this.draggedItemClass)
     this.#clearContainerHoverClasses()
-
-    if (this.wasDropped) {
-      this.dragItem.remove()
-    }
 
     this.sourceContainer = null
     this.dragItem = null
@@ -68,19 +65,6 @@ export default class extends Controller {
     this.containerTargets.forEach(container => container.classList.remove(this.hoverContainerClass))
   }
 
-  async #submitDropRequest(item, container) {
-    const body = new FormData()
-    const id = item.dataset.id
-    const url = container.dataset.dragAndDropUrl.replaceAll("__id__", id)
-
-    return post(url, { body, headers: { Accept: "text/vnd.turbo-stream.html" } })
-  }
-
-  #reloadSourceFrame(sourceContainer) {
-    const frame = sourceContainer.querySelector("[data-drag-and-drop-refresh]")
-    if (frame) frame.reload()
-  }
-
   #decreaseCounter(sourceContainer) {
     const counterElement = sourceContainer.querySelector("[data-drag-and-drop-counter]")
     if (counterElement) {
@@ -93,5 +77,30 @@ export default class extends Controller {
         counterElement.textContent = count - 1
       }
     }
+  }
+
+  #insertDraggedItem(container, item) {
+    const itemContainer = container.querySelector("[data-drag-drop-item-container]")
+    const topItems = itemContainer.querySelectorAll("[data-drag-and-drop-top]")
+    const lastTopItem = topItems[topItems.length - 1]
+
+    if (lastTopItem) {
+      lastTopItem.after(item)
+    } else {
+      itemContainer.prepend(item)
+    }
+  }
+
+  async #submitDropRequest(item, container) {
+    const body = new FormData()
+    const id = item.dataset.id
+    const url = container.dataset.dragAndDropUrl.replaceAll("__id__", id)
+
+    return post(url, { body, headers: { Accept: "text/vnd.turbo-stream.html" } })
+  }
+
+  #reloadSourceFrame(sourceContainer) {
+    const frame = sourceContainer.querySelector("[data-drag-and-drop-refresh]")
+    if (frame) frame.reload()
   }
 }
