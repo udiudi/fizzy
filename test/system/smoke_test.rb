@@ -45,7 +45,7 @@ class SmokeTest < ApplicationSystemTestCase
 
     within("form lexxy-editor figure.attachment[data-content-type='image/jpeg']") do
       assert_selector "img[src*='/rails/active_storage']"
-      assert_selector "figcaption input[placeholder='moon.jpg']"
+      assert_selector "figcaption textarea[placeholder='moon.jpg']"
     end
 
     click_on "Post"
