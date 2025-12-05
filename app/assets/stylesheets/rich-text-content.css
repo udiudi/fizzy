@@ -28,6 +28,14 @@
       }
     }
 
+    :where(ol, ul) {
+      padding-inline-start: 3ch;
+    }
+
+    :where(li:has(li)) {
+      list-style: none;
+    }
+
     :where(b, strong, .lexxy-content__bold) {
       font-weight: 700;
     }
@@ -210,9 +218,12 @@
       --input-border-size: 0;
       --input-padding: 0;
 
+      background-color: var(--input-background, transparent);
+      border: none;
       color: inherit;
       inline-size: 100%;
       max-inline-size: 100%;
+      resize: none;
       text-align: center;
 
       &:focus {
@@ -278,7 +289,8 @@
     display: flex;
     flex-wrap: wrap;
     gap: 1ch;
-    inline-size: auto;
+    inline-size: 100%;
+    margin-inline: 0;
 
     .attachment__caption {
       display: grid;
