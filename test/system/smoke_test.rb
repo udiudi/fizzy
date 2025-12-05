@@ -1,6 +1,26 @@
 require "application_system_test_case"
 
 class SmokeTest < ApplicationSystemTestCase
+  test "joining an account" do
+    account = accounts("37s")
+
+    visit join_url(code: account.join_code.code, script_name: account.slug)
+    fill_in "Email address", with: "newbie@example.com"
+    click_on "Continue"
+
+    assert_selector "h1", text: "Check your email"
+    identity = Identity.find_by!(email_address: "newbie@example.com")
+    code = identity.magic_links.active.first.code
+    fill_in "code", with: code
+    send_keys :enter
+
+    assert_selector "input[id=user_name]"
+    fill_in "Full name", with: "New Bee"
+    click_on "Continue"
+
+    assert_selector "h1", text: "Writebook"
+  end
+
   test "create a card" do
     sign_in_as(users(:david))
 
