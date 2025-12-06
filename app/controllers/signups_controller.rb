@@ -11,7 +11,8 @@ class SignupsController < ApplicationController
   end
 
   def create
-    Signup.new(signup_params).create_identity
+    magic_link = Signup.new(signup_params).create_identity
+    serve_development_magic_link(magic_link)
     redirect_to session_magic_link_path
   end
 
