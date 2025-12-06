@@ -69,4 +69,17 @@ class JoinCodesControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to new_users_verification_url(script_name: @account.slug)
   end
+
+  test "create for different identity terminates existing session" do
+    sign_in_as :kevin
+
+    assert_difference -> { Identity.count }, 1 do
+      assert_difference -> { User.count }, 1 do
+        post join_path(code: @join_code.code, script_name: @account.slug), params: { email_address: "new_user@example.com" }
+      end
+    end
+
+    assert_redirected_to session_magic_link_url(script_name: nil)
+    assert_not_predicate cookies[:session_token], :present?
+  end
 end
