@@ -81,6 +81,13 @@ module Authentication
       end
     end
 
+    def start_authentication_for(identity)
+      identity.send_magic_link.tap do |magic_link|
+        serve_development_magic_link(magic_link)
+        session[:pending_auth_email] = identity.email_address
+      end
+    end
+
     def set_current_session(session)
       Current.session = session
       cookies.signed.permanent[:session_token] = { value: session.signed_id, httponly: true, same_site: :lax }

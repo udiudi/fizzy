@@ -14,6 +14,9 @@ class Sessions::MagicLinksControllerTest < ActionDispatch::IntegrationTest
     magic_link = MagicLink.create!(identity: identity)
 
     untenanted do
+      # 1. Start auth as Kevin (sets session[:pending_auth_email])
+      post session_path, params: { email_address: identity.email_address }
+
       post session_magic_link_url, params: { code: magic_link.code }
 
       assert_response :redirect
@@ -28,12 +31,32 @@ class Sessions::MagicLinksControllerTest < ActionDispatch::IntegrationTest
     magic_link = MagicLink.create!(identity: identity, purpose: :sign_up)
 
     untenanted do
+      # 1. Start auth as Kevin (sets session[:pending_auth_email])
+      post session_path, params: { email_address: identity.email_address }
+
       post session_magic_link_url, params: { code: magic_link.code }
 
       assert_response :redirect
       assert cookies[:session_token].present?
       assert_redirected_to new_signup_completion_path, "Should redirect to signup completion"
       assert_not MagicLink.exists?(magic_link.id), "The magic link should be consumed"
+    end
+  end
+
+  test "create with cross-user code" do
+    identity = identities(:kevin)
+    other_identity = identities(:jason)
+    magic_link = MagicLink.create!(identity: other_identity)
+
+    untenanted do
+      # 1. Start auth as Kevin
+      post session_path, params: { email_address: identity.email_address }
+
+      # 2. Try to use Jason's code
+      post session_magic_link_url, params: { code: magic_link.code }
+
+      assert_redirected_to new_session_path
+      assert_not cookies[:session_token].present?
     end
   end
 
