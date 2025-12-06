@@ -38,6 +38,17 @@
           <%= link_to "Change email", new_user_email_address_path(user_id: Current.user.id), class: "btn btn--plain txt-link txt-small txt-nowrap" %>
         </div>
       </div>
+
+      <% if @user.errors.any? %>
+        <div class="margin-block-half">
+          <ul class="margin-block-none txt-negative txt-small">
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
       <button type="submit" id="log_in" class="btn btn--reversed center" data-form-target="submit">
         <span>Save changes</span>
       </button>
