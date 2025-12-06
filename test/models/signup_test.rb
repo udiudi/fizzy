@@ -1,6 +1,15 @@
 require "test_helper"
 
 class SignupTest < ActiveSupport::TestCase
+  test "validates email format for identity creation" do
+    signup = Signup.new(email_address: "not-an-email")
+    assert_not signup.valid?(:identity_creation)
+    assert signup.errors[:email_address].any?
+
+    signup = Signup.new(email_address: "valid@example.com")
+    assert signup.valid?(:identity_creation)
+  end
+
   test "#create_identity" do
     signup = Signup.new(email_address: "brian@example.com")
 
