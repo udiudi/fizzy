@@ -10,10 +10,17 @@ class SessionsController < ApplicationController
 
   def create
     if identity = Identity.find_by_email_address(email_address)
-      start_authentication_for(identity)
+      set_pending_auth_email identity.email_address
+      redirect_to_session_magic_link identity.send_magic_link
+    else
+      signup = Signup.new(email_address: email_address)
+      if signup.valid?(:identity_creation)
+        set_pending_auth_email email_address
+        redirect_to_session_magic_link signup.create_identity
+      else
+        head :unprocessable_entity
+      end
     end
-
-    redirect_to session_magic_link_path
   end
 
   def destroy
@@ -24,5 +31,9 @@ class SessionsController < ApplicationController
   private
     def email_address
       params.expect(:email_address)
+    end
+
+    def set_pending_auth_email(email_address)
+      session[:pending_auth_email] = email_address
     end
 end
